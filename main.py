@@ -68,7 +68,7 @@ class SkinMerger(CTk):
     
 
     # Error Window Pop-up
-    def showErrorWindow(self, message: str):
+    def showErrorWindow(self, message: str, log=None):
         if hasattr(self, "error_box"):
             self.error_box.destroy()
         
@@ -80,6 +80,25 @@ class SkinMerger(CTk):
 
         close_button = CTkButton(self.error_box, text="Close", width=100, fg_color="#ff4c4c",
                                 hover_color="#cc0000", corner_radius=32, command=self.error_box.destroy)
+        close_button.pack(pady=(0, 10))
+
+        if log:
+            CTkToolTip(error_label, message=log)
+
+    
+    # Error Window Pop-up
+    def showMessagerWindow(self, message: str):
+        if hasattr(self, "message_box"):
+            self.message_box.destroy()
+        
+        self.message_box = CTkFrame(self, width=300, height=120, fg_color="#00002a", corner_radius=12, bg_color="#1d1e1e")
+        self.message_box.place(relx=0.5, rely=0.5, anchor="center")
+
+        error_label = CTkLabel(self.message_box, text=message, text_color="#ccccff", wraplength=280, font=("", 14))
+        error_label.pack(pady=(15, 5), padx=10)
+
+        close_button = CTkButton(self.message_box, text="Close", width=100, fg_color="#4c4cff",
+                                hover_color="#0000cc", corner_radius=32, command=self.message_box.destroy)
         close_button.pack(pady=(0, 10))
         
 
@@ -106,7 +125,7 @@ class SkinMergerLogic:
             self.base_skin_keymodes = iniParser.getKeys(iniParser.findSkinini(self.base_skin_path))
     
         except Exception as e:
-            self.app.showErrorWindow("Not a valid skin folder")
+            self.app.showErrorWindow("Not a valid skin folder", e)
             return None
         
         self.updateTextbox()
@@ -129,7 +148,7 @@ class SkinMergerLogic:
             self.merge_skin_keymodes = None
             self.app.key_select.configure(values=[])
             self.app.key_select.set("N/A")
-            self.app.showErrorWindow("Not a valid skin folder")
+            self.app.showErrorWindow("Not a valid skin folder", e)
             return None
         
         self.updateTextbox()
@@ -194,7 +213,7 @@ class SkinMergerLogic:
             return None
         
         if self.base_skin_path == self.merge_skin_path:
-            self.app.showErrorWindow("Base skin and merge skin cant be the same")
+            self.app.showErrorWindow("Base skin and merge skin cannot be the same")
             return None
 
         keycount = int(self.app.key_select.get().strip('k'))
@@ -210,7 +229,7 @@ class SkinMergerLogic:
             shutil.copytree(self.base_skin_path, new_skin_folder)
         
         except Exception as e:
-            self.app.showErrorWindow("Failed to copy base skin directory to downloads")
+            self.app.showErrorWindow("Failed to copy base skin directory to downloads", e)
             return None
 
         # creates merge files folder
@@ -220,21 +239,20 @@ class SkinMergerLogic:
             os.mkdir(merge_files_folder)
         
         except Exception as e:
-            self.app.showErrorWindow("Failed to make merge files folder")
+            self.app.showErrorWindow("Failed to make merge files folder", e)
             return None
 
         # gets needed_files and puts them in merge files folder
         needed_files = iniParser.getSectionImages(self.merge_skin_path, mania_chunks[keycount])
 
-        missing_files = 0
+        missing_files = []
         for i in needed_files:
-            
             try:
                 shutil.copy(i, merge_files_folder)
             
             except Exception as e:
-                missing_files += 1
-                self.app.showErrorWindow(f"Couldnt copy {missing_files} file(s)")
+                missing_files.append(os.path.basename(i))
+                self.app.showErrorWindow(f"Couldnt copy {len(missing_files)} file(s). Skin sent to your downloads folder.", ", ".join(missing_files))
         
         # edits skin.ini file
         skin_file_path = iniParser.findSkinini(new_skin_folder)
@@ -242,8 +260,29 @@ class SkinMergerLogic:
 
         # Update Author
         iniParser.editValue(skin_file_path, "Author", f"{iniParser.getValue(iniParser.findSkinini(self.base_skin_path), "Author")} + {iniParser.getValue(iniParser.findSkinini(self.merge_skin_path), "Author")}")
-        
+
+        self.finishMerge(len(missing_files))
     
+
+    def finishMerge(self, missing_files):
+        if missing_files == 0:
+            self.app.showMessagerWindow("Merge completed, skin sent to your downloads folder.")
+         
+        self.base_skin_path = None
+        self.merge_skin_path = None
+
+        self.base_skin_keymodes = None
+        self.merge_skin_keymodes = None
+
+        self.selected_keymode = None
+        self.merge_filepaths = []
+
+        self.app.key_select.configure(values=[])
+        self.app.key_select.set("N/A")
+    
+        self.updateTextbox()
+    
+
     @staticmethod
     def getFileName(file_path):
         return os.path.basename(file_path)

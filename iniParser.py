@@ -1,5 +1,4 @@
 '''
-Made for parsing osu!mania skin.ini files
 Github: https://github.com/Greenest-Guy
 '''
 
@@ -34,6 +33,11 @@ class iniParser:
         return content[line - 1]
     
 
+    @staticmethod
+    def startsWith(line, starting: str):
+        return line.lower().strip().startswith(starting.lower())
+
+
     # find skin.ini from dir path
     def findSkinini(dir_path):
         try:
@@ -61,7 +65,7 @@ class iniParser:
     @staticmethod
     def getValue(file_path, key):
         for line in iniParser.getLines(file_path):
-            if line.startswith(f"{key}:"):
+            if iniParser.startsWith(line, f"{key}:"):
                 return iniParser.getLineValue(line)
 
 
@@ -74,7 +78,7 @@ class iniParser:
         
         for line in content:
             line = line.strip()
-            if line.startswith('[') and line.endswith(']') and line not in catagories:
+            if iniParser.startsWith(line, '[') and line.endswith(']') and line not in catagories:
                 catagories.append(line)
 
         return catagories
@@ -91,7 +95,7 @@ class iniParser:
         images = []
 
         for line in iniParser.getLines(file_path):
-            if (line.startswith("NoteImage") or line.startswith("KeyImage")) and iniParser.getLineValue(line) not in images:
+            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage")) and iniParser.getLineValue(line) not in images:
                 images.append(iniParser.getLineValue(line))
         
         return images
@@ -112,7 +116,7 @@ class iniParser:
         images = []
 
         for line in chunk.splitlines():
-            if (line.startswith("NoteImage") or line.startswith("KeyImage")) and iniParser.getLineValue(line) not in images:
+            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage")) and iniParser.getLineValue(line) not in images:
                 images.append((os.path.join(file_path, iniParser.getLineValue(line)) + ".png").replace('/', os.sep))
         
         return images
@@ -123,7 +127,7 @@ class iniParser:
         new_chunk = []
 
         for line in chunk.splitlines():
-            if line.startswith("NoteImage") or line.startswith("KeyImage"):
+            if iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage"):
                 new_chunk.append(f"{iniParser.getKeyValue(line)}: merge_files{os.sep}{os.path.basename(iniParser.getLineValue(line))}")
             
             else:
@@ -131,13 +135,14 @@ class iniParser:
         
         return "\n".join(new_chunk)
 
+
     # edits a key value
     @staticmethod
     def editValue(file_path, value_name, new_value):
         lines = iniParser.getLines(file_path)
         
         for index, line in enumerate(lines):
-            if line.startswith(value_name + ":"):
+            if iniParser.startsWith(line, value_name + ":"):
                 lines[index] = f"{iniParser.getKeyValue(line)}: {new_value}\n"
         
         with open(file_path, 'w', encoding="utf-8") as file:
@@ -150,7 +155,7 @@ class iniParser:
         keys = []
 
         for line in iniParser.getLines(file_path):
-            if line.lower().startswith("keys: "):
+            if iniParser.startsWith(line, "keys: "):
                 key = int(iniParser.getLineValue(line))
                 if key not in keys:
                     keys.append(key)
@@ -172,7 +177,7 @@ class iniParser:
         # add non [Mania] Section(s)
         for line in lines:
             line = line.strip()
-            if not line.lower().startswith("[mania]"):
+            if not iniParser.startsWith(line, "[mania]"):
                 current_chunk.append(line)
 
             else:
@@ -185,7 +190,7 @@ class iniParser:
             line = line.strip()
 
             # if [Mania] line, append this line to current_chunk
-            if line.lower().startswith("[mania]"):
+            if iniParser.startsWith(line, "[mania]"):
                 # if both current_chunk isnt empty and current_key isnt None, add the entire chunk to the dictionary and reset both variables
                 if (current_chunk and current_key is not None) and current_key not in key_chunks:
                     key_chunks[current_key] = "\n".join(current_chunk)
@@ -195,7 +200,7 @@ class iniParser:
                 current_chunk.append(line)
 
             # if line starts with "keys: " extract key value and set current_key
-            elif line.lower().startswith("keys:"):
+            elif iniParser.startsWith(line, "keys:"):
                 current_key = int(iniParser.getLineValue(line))
                 current_chunk.append(line)
             
