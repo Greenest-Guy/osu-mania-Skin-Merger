@@ -248,12 +248,21 @@ class SkinMergerLogic:
         missing_files = []
         for i in needed_files:
             try:
-                shutil.copy(i, merge_files_folder)
-            
-            except Exception as e:
-                missing_files.append(os.path.basename(i))
-                self.app.showErrorWindow(f"Couldnt copy {len(missing_files)} file(s). Skin sent to your downloads folder.", ", ".join(missing_files))
+                shutil.copy(iniParser.getHDImage(i), merge_files_folder)
+
+            except Exception:
+                try:
+                    shutil.copy(i, merge_files_folder)
+                
+                except Exception as e:
+                    missing_files.append(os.path.basename(i))
+                    if len(missing_files) == 1:
+                        self.app.showErrorWindow(f"Couldnt copy {len(missing_files)} file. Skin sent to your downloads folder.", ", ".join(missing_files))
+
+                    else:
+                        self.app.showErrorWindow(f"Couldnt copy {len(missing_files)} files. Skin sent to your downloads folder.", ", ".join(missing_files)) 
         
+
         # edits skin.ini file
         skin_file_path = iniParser.findSkinini(new_skin_folder)
         iniParser.replaceKeySection(skin_file_path, mania_chunks, keycount)
@@ -262,6 +271,9 @@ class SkinMergerLogic:
         iniParser.editValue(skin_file_path, "Author", f"{iniParser.getValue(iniParser.findSkinini(self.base_skin_path), "Author")} + {iniParser.getValue(iniParser.findSkinini(self.merge_skin_path), "Author")}")
 
         self.finishMerge(len(missing_files))
+
+        # Adds Tag to top (Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger)
+        iniParser.addTag(skin_file_path)
     
 
     def finishMerge(self, missing_files):

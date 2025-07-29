@@ -95,7 +95,7 @@ class iniParser:
         images = []
 
         for line in iniParser.getLines(file_path):
-            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage")) and iniParser.getLineValue(line) not in images:
+            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition"))) and iniParser.getLineValue(line) not in images:
                 images.append(iniParser.getLineValue(line))
         
         return images
@@ -116,7 +116,7 @@ class iniParser:
         images = []
 
         for line in chunk.splitlines():
-            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage")) and iniParser.getLineValue(line) not in images:
+            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition"))) and iniParser.getLineValue(line) not in images:
                 images.append((os.path.join(file_path, iniParser.getLineValue(line)) + ".png").replace('/', os.sep))
         
         return images
@@ -127,13 +127,19 @@ class iniParser:
         new_chunk = []
 
         for line in chunk.splitlines():
-            if iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage"):
+            if iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition")):
                 new_chunk.append(f"{iniParser.getKeyValue(line)}: merge_files{os.sep}{os.path.basename(iniParser.getLineValue(line))}")
             
             else:
                 new_chunk.append(line)
         
         return "\n".join(new_chunk)
+    
+
+    @staticmethod
+    def getHDImage(image_path):
+        base, extension = os.path.splitext(image_path)
+        return f"{base}@2x{extension}"
 
 
     # edits a key value
@@ -234,3 +240,12 @@ class iniParser:
 
         with open(skin_file_path, 'w', encoding="utf-8") as file:
             file.write(new_file)
+
+
+    def addTag(skin_file_path):
+        with open(skin_file_path, 'r') as f:
+            original_content = f.read()
+
+        with open(skin_file_path, 'w', encoding="utf-8") as file:
+            file.write("//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n")
+            file.write(original_content)
