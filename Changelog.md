@@ -1,6 +1,19 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [v1.0.1] 2025-07-29
+
+### Added
+
+### Changed
+- Improved IniParser.py logic and comments
+- PEP8 formatting
+
+### Fixed
+- East Asian language support
+
+### Removed
+
 
 ## [v1.0.0] 2025-07-28
 
