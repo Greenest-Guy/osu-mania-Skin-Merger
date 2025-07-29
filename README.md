@@ -7,7 +7,7 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 
 ## :telescope: Preview
-<img width="898" height="421" alt="image" src="https://github.com/user-attachments/assets/4bba19e1-f9cd-403b-9cd5-ae6c3218988d" />
+https://github.com/user-attachments/assets/a44d55a8-0b71-4629-9b4b-fb92003da497
 
 
 
@@ -20,6 +20,11 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 ### :1234: Keycount
   The keycount is taken from the merge skin and added to the base skin.
+
+
+
+## :exclamation: Issues & Suggestions
+  Please report any issues and or suggestions [here on GitHub](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/issues) or message me on Discord ```rh7thm```
 
 
 
