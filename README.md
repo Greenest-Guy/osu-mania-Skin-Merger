@@ -23,6 +23,11 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 
 
+## :exclamation: Issues & Suggestions
+  Please report any issues and or suggestions [here on GitHub](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/issues) or message me on Discord ```rh7thm```
+
+
+
 ## :toolbox: How the Program Works
 1. Creates a directory within the user's downloads folder (product folder), in which the merged skin will be created.
 
