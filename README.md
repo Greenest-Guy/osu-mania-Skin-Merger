@@ -7,7 +7,8 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 
 ## :telescope: Preview
-<img width="898" height="421" alt="image" src="https://github.com/user-attachments/assets/4bba19e1-f9cd-403b-9cd5-ae6c3218988d" />
+https://github.com/user-attachments/assets/b73c0f20-2aa3-46d7-9b95-b5d867b756bc
+
 
 
 
