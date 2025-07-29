@@ -1,251 +1,285 @@
-'''
-Github: https://github.com/Greenest-Guy
-'''
-
 import os
 
+'''
+Github: https://github.com/Greenest-Guy
 
-class iniParser:
-    # returns the file as a string
+VARIABLE NAMING
+    file_path --> Complete file path to a skin.ini file
+    content -->  Complete contents of a skin.ini file
+    dir_path --> Path to a directory
+'''
+
+
+class IniParser:
+    # returns contents of file at file_path
     @staticmethod
-    def getContents(file_path): 
+    def getContents(file_path):
         with open(file_path, 'r', encoding="utf-8") as file:
             content = file.read()
 
         return content
 
+    # returns a list of lines from the file at file_path
 
-    # returns a list containing the files lines
     @staticmethod
-    def getLines(file_path): 
+    def getLines(file_path):
         with open(file_path, 'r', encoding="utf-8") as file:
             content = file.readlines()
-        
+
         return content
 
+    # returns the line at index n (1-based) from file_path (skin.ini)
 
-    # returns line number
     @staticmethod
-    def getLine(file_path, line): 
+    def getLine(file_path, index):
         with open(file_path, 'r', encoding="utf-8") as file:
             content = file.readlines()
 
-        return content[line - 1]
-    
+        if index < 1 or index > len(content):
+            raise IndexError("Line index out of range.")
+
+        return content[index - 1]
+
+    # returns true or false by seeing if line starts with starting (case-insensitive and clears whitespace)
 
     @staticmethod
     def startsWith(line, starting: str):
         return line.lower().strip().startswith(starting.lower())
 
+    # returns complete path to the skin.ini within a directory (non-recursive)
 
-    # find skin.ini from dir path
+    @staticmethod
     def findSkinini(dir_path):
         try:
             for file in os.listdir(dir_path):
                 if os.path.isfile(os.path.join(dir_path, file)) and file.lower() == "skin.ini":
                     return os.path.join(dir_path, file)
-                
-        except Exception as e:
-            return None
-    
 
-    # gets the value associated with a line
+        except Exception:
+            return None
+
+    # returns the value from the key:value pair in line
+
     @staticmethod
-    def getLineValue(line): 
+    def getValueFromLine(line):
+        if ':' not in line:
+            return None
+
         return line[(line.index(':')+1):].strip()
 
+    # returns the key from the key:value pair in line
 
-    # gets the key associated with a line
     @staticmethod
-    def getKeyValue(line):
-        return line[:line.index(':')]
-    
+    def getKeyFromLine(line):
+        if ':' not in line:
+            return None
 
-    # gets the first instance of a value associated with a key
+        return line.split(':', 1)[0].strip()
+
+    # returns the first instance of a value associated with key
+
     @staticmethod
     def getValue(file_path, key):
-        for line in iniParser.getLines(file_path):
-            if iniParser.startsWith(line, f"{key}:"):
-                return iniParser.getLineValue(line)
+        for line in IniParser.getLines(file_path):
+            if IniParser.startsWith(line, f"{key}:"):
+                return IniParser.getValueFromLine(line)
 
+    # returns a list of all categories within a skin.ini file
 
-    # returns a list of all catagories
     @staticmethod
-    def getCatagories(file_path): 
-        catagories = []
+    def getCategories(file_path):
+        categories = []
         with open(file_path, 'r', encoding="utf-8") as file:
             content = file.readlines()
-        
+
         for line in content:
             line = line.strip()
-            if iniParser.startsWith(line, '[') and line.endswith(']') and line not in catagories:
-                catagories.append(line)
+            if IniParser.startsWith(line, '[') and line.endswith(']') and line not in categories:
+                categories.append(line)
 
-        return catagories
-    
-    # returns directory path
+        return categories
+
+    # returns the directory path of file_path
+
     @staticmethod
     def getDirPath(file_path):
         return os.path.dirname(file_path)
-    
 
-    # returns a list of all image paths (relating to notes or keys)
+    # returns true or false regarding if line contains an image path (NoteImage, KeyImage, Hit0, Hit50, Hit100, Hit200, Hit300, Hit300g) # IniParser.isImageLine(line)
+
     @staticmethod
-    def getImages(file_path): 
+    def isImageLine(line):
+        return (IniParser.startsWith(line, "NoteImage") or
+                IniParser.startsWith(line, "KeyImage") or
+                (IniParser.startsWith(line, "Hit") and not IniParser.startsWith(line, "HitPosition")))
+
+    # returns a list of all local image paths from a skin.ini file
+
+    @staticmethod
+    def getImages(file_path):
         images = []
 
-        for line in iniParser.getLines(file_path):
-            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition"))) and iniParser.getLineValue(line) not in images:
-                images.append(iniParser.getLineValue(line))
-        
+        for line in IniParser.getLines(file_path):
+            if IniParser.isImageLine(line) and IniParser.getValueFromLine(line) not in images:
+                images.append(IniParser.getValueFromLine(line))
+
         return images
 
+    # returns a list of all complete image paths from a skin.ini file
 
-    # returns a list of all image paths
     @staticmethod
     def getImagesPath(file_path):
         images = []
-        for image in iniParser.getImages(file_path):
-            images.append(os.path.join(iniParser.getDirPath(file_path), image.replace('/', os.sep)) + '.png')
-        
+        for image in IniParser.getImages(file_path):
+            images.append(os.path.join(IniParser.getDirPath(
+                file_path), image.replace('/', os.sep)) + '.png')
+
         return images
-    
+
+    # returns a list of all complete image paths from a skin.ini file at a specific section
 
     @staticmethod
-    def getSectionImages(file_path, chunk):
+    def getSectionImages(file_path, section):
         images = []
 
-        for line in chunk.splitlines():
-            if (iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition"))) and iniParser.getLineValue(line) not in images:
-                images.append((os.path.join(file_path, iniParser.getLineValue(line)) + ".png").replace('/', os.sep))
-        
+        for line in section.splitlines():
+            if (IniParser.isImageLine(line)) and IniParser.getValueFromLine(line) not in images:
+                images.append((os.path.join(file_path, IniParser.getValueFromLine(
+                    line)) + ".png").replace('/', os.sep))
+
         return images
 
+    # returns a list of the corrected image paths for the files in the merge_folder
 
     @staticmethod
-    def getNewSectionImages(chunk):
-        new_chunk = []
+    def getNewSectionImages(section):
+        new_section = []
 
-        for line in chunk.splitlines():
-            if iniParser.startsWith(line, "NoteImage") or iniParser.startsWith(line, "KeyImage") or (iniParser.startsWith(line, "Hit") and not iniParser.startsWith(line, "HitPosition")):
-                new_chunk.append(f"{iniParser.getKeyValue(line)}: merge_files{os.sep}{os.path.basename(iniParser.getLineValue(line))}")
-            
+        for line in section.splitlines():
+            if (IniParser.isImageLine(line)) and IniParser.getValueFromLine(line):
+                new_section.append(
+                    f"{IniParser.getKeyFromLine(line)}: merge_files{os.sep}{os.path.basename(IniParser.getValueFromLine(line))}")
+
             else:
-                new_chunk.append(line)
-        
-        return "\n".join(new_chunk)
-    
+                new_section.append(line)
+
+        return "\n".join(new_section)
+
+    # returns the equivalent HD file path of an image
 
     @staticmethod
     def getHDImage(image_path):
         base, extension = os.path.splitext(image_path)
         return f"{base}@2x{extension}"
 
+    # EDIT FUNCTION: Edits a value of a keyvalue pair within a skin.ini file
 
-    # edits a key value
     @staticmethod
     def editValue(file_path, value_name, new_value):
-        lines = iniParser.getLines(file_path)
-        
+        lines = IniParser.getLines(file_path)
+
         for index, line in enumerate(lines):
-            if iniParser.startsWith(line, value_name + ":"):
-                lines[index] = f"{iniParser.getKeyValue(line)}: {new_value}\n"
-        
+            if IniParser.startsWith(line, value_name + ":"):
+                lines[index] = f"{IniParser.getKeyFromLine(line)}: {new_value}\n"
+
         with open(file_path, 'w', encoding="utf-8") as file:
             file.writelines(lines)
 
-
     # returns a list of all keycounts in a skin.ini file
+
     @staticmethod
     def getKeys(file_path):
         keys = []
 
-        for line in iniParser.getLines(file_path):
-            if iniParser.startsWith(line, "keys: "):
-                key = int(iniParser.getLineValue(line))
+        for line in IniParser.getLines(file_path):
+            if IniParser.startsWith(line, "keys:"):
+                key = int(IniParser.getValueFromLine(line))
                 if key not in keys:
                     keys.append(key)
-        
+
         keys.sort()
-        
+
         return keys
 
-
     # seperates each [Mania] block into a dictionary with the key being the keycount that [Mania] block is associated with and the value being the block itself
-    @staticmethod
-    def dictKeyChunks(file_path):
-        key_chunks = {}
-        lines = iniParser.getLines(file_path)
 
-        current_chunk = []
+    @staticmethod
+    def dictKeySections(file_path):
+        key_sections = {}
+        lines = IniParser.getLines(file_path)
+
+        current_section = []
         current_key = None
 
         # add non [Mania] Section(s)
         for line in lines:
             line = line.strip()
-            if not iniParser.startsWith(line, "[mania]"):
-                current_chunk.append(line)
+            if not IniParser.startsWith(line, "[mania]"):
+                current_section.append(line)
 
             else:
                 break
 
-        key_chunks[-1] = "\n".join(current_chunk)
-        current_chunk = []
+        key_sections[-1] = "\n".join(current_section)
+        current_section = []
 
         for line in lines:
             line = line.strip()
 
-            # if [Mania] line, append this line to current_chunk
-            if iniParser.startsWith(line, "[mania]"):
-                # if both current_chunk isnt empty and current_key isnt None, add the entire chunk to the dictionary and reset both variables
-                if (current_chunk and current_key is not None) and current_key not in key_chunks:
-                    key_chunks[current_key] = "\n".join(current_chunk)
-                    current_chunk = []
+            # if [Mania] line, append this line to current_section
+            if IniParser.startsWith(line, "[mania]"):
+                # if both current_section isnt empty and current_key isnt None, add the entire section to the dictionary and reset both variables
+                if (current_section and current_key is not None) and current_key not in key_sections:
+                    key_sections[current_key] = "\n".join(current_section)
+                    current_section = []
                     current_key = None
-                    
-                current_chunk.append(line)
+
+                current_section.append(line)
 
             # if line starts with "keys: " extract key value and set current_key
-            elif iniParser.startsWith(line, "keys:"):
-                current_key = int(iniParser.getLineValue(line))
-                current_chunk.append(line)
-            
-            # if a chunk is already started add line to chunk
-            elif current_chunk:
-                current_chunk.append(line)
-            
-        # add last pending chunk
-        if current_chunk and current_key is not None:
-            key_chunks[current_key] = "\n".join(current_chunk)
+            elif IniParser.startsWith(line, "keys:"):
+                current_key = int(IniParser.getValueFromLine(line))
+                current_section.append(line)
 
+            # if a section is already started add line to section
+            elif current_section:
+                current_section.append(line)
 
-        return key_chunks
+        # add last pending section
+        if current_section and current_key is not None:
+            key_sections[current_key] = "\n".join(current_section)
 
-    
+        return key_sections
+
+    # EDIT FUNCTION: replaces a key section within skin_file_path with section regarding key count num
+
     @staticmethod
-    def replaceKeySection(skin_file_path, section, num):
-        sections = iniParser.dictKeyChunks(skin_file_path)
-        
+    def replaceKeySection(file_path, section, num):
+        sections = IniParser.dictKeySections(file_path)
+
         if num not in sections:
-            sections[num] = iniParser.getNewSectionImages(section[num])
+            sections[num] = IniParser.getNewSectionImages(section[num])
             sections = dict(sorted(sections.items()))
-        
+
         elif num in sections:
-            sections[num] = iniParser.getNewSectionImages(section[num])
-        
+            sections[num] = IniParser.getNewSectionImages(section[num])
+
         new_file = ""
 
         for i in sections:
             new_file += sections[i] + "\n"
 
-        with open(skin_file_path, 'w', encoding="utf-8") as file:
+        with open(file_path, 'w', encoding="utf-8") as file:
             file.write(new_file)
 
+    # adds a tag to the top of file_path "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n"
 
-    def addTag(skin_file_path):
-        with open(skin_file_path, 'r') as f:
+    @staticmethod
+    def addTag(file_path):
+        with open(file_path, 'r', encoding="utf-8") as f:
             original_content = f.read()
 
-        with open(skin_file_path, 'w', encoding="utf-8") as file:
-            file.write("//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n")
+        with open(file_path, 'w', encoding="utf-8") as file:
+            file.write(
+                "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n")
             file.write(original_content)
