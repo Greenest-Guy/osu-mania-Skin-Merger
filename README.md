@@ -7,11 +7,6 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 
 
-## :telescope: Preview
-▶️ [DEMO VIDEO](DEMO.mov)
-
-
-
 ## :gear: Options
 ### :bricks: Base Skin
   The base skin is where the majority of the files are drawn from, e.g., menu layout, hitsounds, and the rest of the keycounts, excluding the merging one.
