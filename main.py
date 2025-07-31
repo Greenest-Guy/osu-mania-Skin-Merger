@@ -439,8 +439,9 @@ class SkinMergerLogic:
                     shutil.copy(
                         f"{os.path.dirname(self.merge_skin_path)}{os.sep}{i}@2x.png", key_folder)
 
-                except Exception:
-                    pass
+                except Exception as e:
+                    self.app.showErrorWindow(
+                        "Base skin and merge skin cannot be the same", log=e)
 
         sections[keycount] = section
 
