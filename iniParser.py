@@ -84,6 +84,14 @@ class IniParser:
             if IniParser.startsWith(line, f"{key}:"):
                 return IniParser.getValueFromLine(line)
 
+    # returns keycount associated with a section
+
+    @staticmethod
+    def getSectionKeycount(section):
+        for line in section.splitlines():
+            if IniParser.startsWith(line, "keys:"):
+                return IniParser.getValueFromLine(line)
+
     # returns a list of all categories within a skin.ini file
 
     @staticmethod
@@ -154,11 +162,12 @@ class IniParser:
     @staticmethod
     def getNewSectionImages(section):
         new_section = []
+        key_count = IniParser.getSectionKeycount(section)
 
         for line in section.splitlines():
             if (IniParser.isImageLine(line)) and IniParser.getValueFromLine(line):
                 new_section.append(
-                    f"{IniParser.getKeyFromLine(line)}: merge_files{os.sep}{os.path.basename(IniParser.getValueFromLine(line))}")
+                    f"{IniParser.getKeyFromLine(line)}: merge_files{os.sep}{key_count}_key{os.sep}{os.path.basename(IniParser.getValueFromLine(line))}")
 
             else:
                 new_section.append(line)

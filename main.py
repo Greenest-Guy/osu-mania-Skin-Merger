@@ -32,7 +32,7 @@ class SkinMerger(CTk):
         CTkLabel(self, image=background_image, text="").place(x=0, y=0)
 
         # BUTTON Base Skin
-        base_skin_button = CTkButton(self, width=150, height=25, bg_color="#090909", text="Base Skin", command=self.FM.selectBaseSkin,
+        base_skin_button = CTkButton(self, width=140, height=25, bg_color="#090909", text="Base Skin", command=self.FM.selectBaseSkin,
                                      fg_color="#ffffff", hover_color="#b1b1b1", text_color="#000000", font=("", 16))
 
         base_skin_button.place(x=135-base_skin_button.cget("width")/2, y=65)
@@ -41,10 +41,10 @@ class SkinMerger(CTk):
                    message="The merge skin will be added to this skin")
 
         # BUTTON Merge Skin
-        merge_skin_button = CTkButton(self, width=150, height=25, bg_color="#090909", text="Merging Skin", command=self.FM.selectMergeSkin,
+        merge_skin_button = CTkButton(self, width=140, height=25, bg_color="#090909", text="Merging Skin", command=self.FM.selectMergeSkin,
                                       text_color="#000000", fg_color="#ffffff", hover_color="#b1b1b1", font=("", 16))
 
-        merge_skin_button.place(x=135-base_skin_button.cget("width")/2, y=146)
+        merge_skin_button.place(x=135-merge_skin_button.cget("width")/2, y=126)
 
         CTkToolTip(merge_skin_button,
                    message="Keycount from this skin gets added to the base skin")
@@ -53,26 +53,44 @@ class SkinMerger(CTk):
         self.key_select = CTkOptionMenu(self, values=["N/A"], width=65, height=25, text_color="#000000", bg_color="#090909", font=(
             "", 16), fg_color="#ffffff", button_color="#bebebe", button_hover_color="#929292", command=self.FM.updateTextbox)
 
-        self.key_select.place(x=135-self.key_select.cget("width")/2, y=228)
+        self.key_select.place(x=135-self.key_select.cget("width")/2, y=248)
 
         CTkToolTip(
             self.key_select, message="The keycount being added to the base skin from the merge skin")
 
-        # BUTTON Merge
-        merge_button = CTkButton(self, width=150, height=25, bg_color="#090909", text="Merge",
-                                 text_color="#000000", fg_color="#ffffff", hover_color="#b1b1b1", font=("", 16), command=self.FM.merge)
+        # OPTION MENU Merge Option
+        self.merge_option = CTkOptionMenu(self, values=["New Skin", "Overwrite Skin"], width=140, height=25, text_color="#000000", bg_color="#090909", font=(
+            "", 16), fg_color="#ffffff", button_color="#bebebe", button_hover_color="#929292", command=self.updateToolTip)
 
-        merge_button.place(x=135-base_skin_button.cget("width")/2, y=310)
+        self.merge_option.place(x=135-self.merge_option.cget("width")/2, y=187)
+
+        self.merge_option_tip = CTkToolTip(
+            self.merge_option, message="Create a new merged skin in your downloads folder")
+
+        # BUTTON Merge
+        merge_button = CTkButton(self, width=120, height=25, bg_color="#090909", text="Merge",
+                                 text_color="#000000", fg_color="#ffffff", hover_color="#b1b1b1", font=("", 16), command=self.FM.mergeLogic)
+
+        merge_button.place(x=135-merge_button.cget("width")/2, y=310)
 
         CTkToolTip(
-            merge_button, message="Add the selected keycount from the merge skin to the base skin!")
+            merge_button, message="Merge the selected keycount from the merge skin to the base skin")
 
         # Textbox
         self.textbox = CTkTextbox(self, width=598, height=323, font=("", 16))
         self.textbox.place(x=267, y=39)
         self.textbox.configure(state="disabled")
 
-    # Error Window Pop-up
+    def updateToolTip(self, merge_option):
+        if merge_option == "New Skin":
+            self.merge_option_tip.configure(
+                message="Create the merged skin in your downloads folder")
+
+        else:
+            self.merge_option_tip.configure(
+                message="WARNING: Overwriting will modify your base skin permanently")
+
+        # Error Window Pop-up
 
     def showErrorWindow(self, message: str, log=None):
         if hasattr(self, "error_box"):
@@ -211,34 +229,18 @@ class SkinMergerLogic:
 
         self.disableTextbox()
 
-    def merge(self):
-        # error
-        if IniParser.findSkinini(self.base_skin_path) is None and IniParser.findSkinini(self.merge_skin_path) is None:
-            self.app.showErrorWindow("Invalid base and merge skin")
-            return None
-
-        elif IniParser.findSkinini(self.base_skin_path) is None:
-            self.app.showErrorWindow("Invalid base skin")
-            return None
-
-        elif IniParser.findSkinini(self.merge_skin_path) is None:
-            self.app.showErrorWindow("Invalid merge skin")
-            return None
-
-        if self.base_skin_path == self.merge_skin_path:
-            self.app.showErrorWindow(
-                "Base skin and merge skin cannot be the same")
-            return None
-
+    def mergeNewSkin(self):
         keycount = int(self.app.key_select.get().strip('k'))
         mania_sections = IniParser.dictKeySections(
             IniParser.findSkinini(self.merge_skin_path))
+
         name = f"Merged-Skin-{self.getTime()}"
 
         # creates skin folder in downloads with files from base skin
-        downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+        self.downloads_folder = os.path.join(
+            os.path.expanduser("~"), "Downloads")
 
-        new_skin_folder = os.path.join(downloads_folder, name)
+        new_skin_folder = os.path.join(self.downloads_folder, name)
 
         try:
             shutil.copytree(self.base_skin_path, new_skin_folder)
@@ -251,12 +253,22 @@ class SkinMergerLogic:
         # creates merge files folder
         merge_files_folder = os.path.join(new_skin_folder, "merge_files")
 
-        try:
-            os.mkdir(merge_files_folder)
+        if not os.path.exists(merge_files_folder):
+            try:
+                os.mkdir(merge_files_folder)
 
-        except Exception as e:
-            self.app.showErrorWindow("Failed to make merge files folder", e)
-            return None
+            except Exception as e:
+                self.app.showErrorWindow(
+                    "Failed to make merge files folder", e)
+                return None
+
+        # creates [num]_key folder
+        key_folder = os.path.join(merge_files_folder, f"{keycount}_key")
+
+        if os.path.exists(key_folder):
+            shutil.rmtree(key_folder)
+
+        os.mkdir(key_folder)
 
         # gets needed_files and puts them in merge files folder
         needed_files = IniParser.getSectionImages(
@@ -265,11 +277,11 @@ class SkinMergerLogic:
         missing_files = []
         for i in needed_files:
             try:
-                shutil.copy(IniParser.getHDImage(i), merge_files_folder)
+                shutil.copy(IniParser.getHDImage(i), key_folder)
 
             except Exception:
                 try:
-                    shutil.copy(i, merge_files_folder)
+                    shutil.copy(i, key_folder)
 
                 except Exception as e:
                     missing_files.append(os.path.basename(i))
@@ -289,16 +301,100 @@ class SkinMergerLogic:
         IniParser.editValue(skin_file_path, "Author",
                             f"{IniParser.getValue(IniParser.findSkinini(self.base_skin_path), "Author")} + {IniParser.getValue(IniParser.findSkinini(self.merge_skin_path), "Author")}")
 
+        self.updateJudgements(skin_file_path, keycount, key_folder)
+
         self.finishMerge(len(missing_files))
 
         # Adds Tag to top (Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger)
         IniParser.addTag(skin_file_path)
 
-    def finishMerge(self, missing_files):
-        if missing_files == 0:
-            self.app.showMessagerWindow(
-                "Merge completed, skin sent to your downloads folder.")
+    def overwriteSkin(self):
+        keycount = int(self.app.key_select.get().strip('k'))
+        mania_sections = IniParser.dictKeySections(
+            IniParser.findSkinini(self.merge_skin_path))
 
+        merge_files_folder = os.path.join(self.base_skin_path, "merge_files")
+
+        if not os.path.exists(merge_files_folder):
+            try:
+                os.mkdir(merge_files_folder)
+
+            except Exception as e:
+                self.app.showErrorWindow(
+                    "Failed to make merge files folder", e)
+                return None
+
+        # creates [num]_key folder
+        key_folder = os.path.join(merge_files_folder, f"{keycount}_key")
+
+        if os.path.exists(key_folder):
+            shutil.rmtree(key_folder)
+
+        os.mkdir(key_folder)
+
+        # gets needed_files and puts them in merge files folder
+        needed_files = IniParser.getSectionImages(
+            self.merge_skin_path, mania_sections[keycount])
+
+        missing_files = []
+        for i in needed_files:
+            try:
+                shutil.copy(IniParser.getHDImage(i), key_folder)
+
+            except Exception:
+                try:
+                    shutil.copy(i, key_folder)
+
+                except Exception as e:
+                    missing_files.append(os.path.basename(i))
+                    if len(missing_files) == 1:
+                        self.app.showErrorWindow(
+                            f"Couldnt copy {len(missing_files)} file. Skin sent to your downloads folder.", ", ".join(missing_files))
+
+                    else:
+                        self.app.showErrorWindow(
+                            f"Couldnt copy {len(missing_files)} files. Skin sent to your downloads folder.", ", ".join(missing_files))
+
+        # edits skin.ini file
+        skin_file_path = IniParser.findSkinini(self.base_skin_path)
+        IniParser.replaceKeySection(skin_file_path, mania_sections, keycount)
+
+        # Update Author
+        base_skin_author = IniParser.getValue(
+            IniParser.findSkinini(self.base_skin_path), "Author")
+        IniParser.editValue(skin_file_path, "Author",
+                            f"{base_skin_author} + {IniParser.getValue(IniParser.findSkinini(self.merge_skin_path), "Author")}")
+
+        self.updateJudgements(IniParser.findSkinini(
+            self.base_skin_path), keycount, key_folder)
+        self.finishMerge(len(missing_files))
+
+    def mergeLogic(self):
+        # error checking
+        if IniParser.findSkinini(self.base_skin_path) is None and IniParser.findSkinini(self.merge_skin_path) is None:
+            self.app.showErrorWindow("Invalid base and merge skin")
+            return None
+
+        elif IniParser.findSkinini(self.base_skin_path) is None:
+            self.app.showErrorWindow("Invalid base skin")
+            return None
+
+        elif IniParser.findSkinini(self.merge_skin_path) is None:
+            self.app.showErrorWindow("Invalid merge skin")
+            return None
+
+        if self.base_skin_path == self.merge_skin_path:
+            self.app.showErrorWindow(
+                "Base skin and merge skin cannot be the same")
+            return None
+
+        if self.app.merge_option.get() == "New Skin":
+            self.mergeNewSkin()
+
+        elif self.app.merge_option.get() == "Overwrite Skin":
+            self.overwriteSkin()
+
+    def finishMerge(self, missing_files):
         self.base_skin_path = None
         self.merge_skin_path = None
 
@@ -311,7 +407,45 @@ class SkinMergerLogic:
         self.app.key_select.configure(values=[])
         self.app.key_select.set("N/A")
 
+        if missing_files == 0:
+            self.app.showMessagerWindow(
+                "Merge completed, skin sent to your downloads folder.")
+
         self.updateTextbox()
+
+    def updateJudgements(self, merged_file, keycount, key_folder):
+        sections = IniParser.dictKeySections(merged_file)
+        section = sections[keycount]
+
+        judgment_names = ["mania-hit0", "mania-hit50", "mania-hit100",
+                          "mania-hit200", "mania-hit300", "mania-hit300g"]
+
+        judgement_keys = ["Hit0", "Hit50",
+                          "Hit100", "Hit200", "Hit300", "Hit300g"]
+
+        if all(hit not in section for hit in judgement_keys):
+            for hit in judgement_keys:
+                section += f"\n{hit}: merge_files{os.sep}{keycount}_key{os.sep}mania-{hit.lower()}"
+
+        else:
+            return None
+
+        for i in judgment_names:
+            try:
+                shutil.copy(
+                    f"{self.merge_skin_path}{os.sep}{i}.png", key_folder)
+            except Exception:
+                try:
+                    shutil.copy(
+                        f"{os.path.dirname(self.merge_skin_path)}{os.sep}{i}@2x.png", key_folder)
+
+                except Exception:
+                    pass
+
+        sections[keycount] = section
+
+        with open(merged_file, 'w', encoding="utf-8") as file:
+            file.write("\n".join(sections.values()))
 
     @staticmethod
     def getFileName(file_path):
