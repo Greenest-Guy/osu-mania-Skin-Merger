@@ -44,6 +44,12 @@ https://github.com/user-attachments/assets/a44d55a8-0b71-4629-9b4b-fb92003da497
 
 
 
+## :warning: Disclaimer
+  This tool is for **personal use** only. Merged skins may violate osu! community guidelines if not properly credited and/or distributed improperly. Make sure to credit ALL authors and not claim ownership of any assets you did not create.
+  See [DISCLAIMER.md](./DISCLAIMER.md) for full details.
+  
+
+
 ## :arrow_heading_down: Download Options
 ### :octocat: GitHub
 - [Download v0.2.0-beta (EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/download/v0.2.0-beta/osu.mania.Skin.Merger.v0.2.0b0.exe)
