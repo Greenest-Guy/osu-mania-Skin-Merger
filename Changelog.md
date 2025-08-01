@@ -1,6 +1,21 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+
+## [v1.1.0] 2025-07-30
+
+### Added
+- Option to overwrite skins
+
+### Changed
+- Seperate directory(s) within merge_files for each keycount
+
+### Fixed
+- Missing judgement images
+
+### Removed
+
+
 ## [v1.0.1] 2025-07-29
 
 ### Added
