@@ -1,6 +1,22 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. (yyyy-mm-dd)
+
+## [v1.2.0] 2025-08-03
+
+### Added
+- Copying default files and adding _None
+- default_assets.py
+- key_layouts.py
+
+### Changed
+- General process to copying files
+- Seperated the classes from main.py into main.py & logic.py
+
+### Fixed
+- Default files not being added
+
+### Removed
 
 ## [v1.1.0] 2025-07-30
 
