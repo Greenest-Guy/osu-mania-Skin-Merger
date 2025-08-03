@@ -52,7 +52,7 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 
 ## :arrow_heading_down: Download Options
 ### :octocat: GitHub
-- [Download v0.2.0-beta (EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/download/v0.2.0-beta/osu.mania.Skin.Merger.v0.2.0b0.exe)
+- [Download v1.2.0(EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/download/v1.2.0/osu.mania.Skin.Merger.v1.2.0.exe)
 ### :cloud: Google Drive
 - [Download via Google Drive](https://drive.google.com/drive/folders/1PNMQrJlja3rPaYmGyrkOC8eXjCaQexuF?usp=sharing)
 ### :snake: Source Code
