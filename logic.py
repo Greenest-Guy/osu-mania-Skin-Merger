@@ -449,7 +449,7 @@ class SkinMergerLogic:
                 return False
 
             for i in range(keycount):
-                section += f"\nNoteImage{i}{type}: merge_files/{keycount}_key/mania-note{key_layout[i]}"
+                section += f"\nNoteImage{i}{type}: merge_files/{keycount}_key/mania-note{key_layout[i]}{type}"
 
             sections[keycount] = section
 
