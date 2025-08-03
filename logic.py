@@ -443,6 +443,20 @@ class SkinMergerLogic:
                     shutil.copy(file, key_folder)
                     found = True
 
+            if not found and type == "T":
+                for i in range(keycount):
+                    section += f"\nNoteImage{i}{type}: merge_files/{keycount}_key/mania-note{key_layout[i]}H"
+
+                sections[keycount] = section
+
+                destination_skinini = IniParser.findSkinini(
+                    destination_skin_path)
+
+                with open(destination_skinini, 'w', encoding="utf-8") as file:
+                    file.write("\n".join(sections.values()))
+
+                return True
+
             if not found:
                 self.app.showErrorWindow(
                     f"mania-note{type} not found")
