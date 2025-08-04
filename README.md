@@ -37,8 +37,8 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 
 3. Creates another directory within the product folder named "merge_files"
    
-5. Creates a directory within merge_files titled "(Merging Keycount)_key".
-     - For example if you were merging a 7k skin, the directory would be titled 7_key inside of merge_files
+5. Creates a directory within merge_files named "(Merging Keycount)_key".
+     - E.g. if you selected a 7k skin, the directory would be named 7_key inside of merge_files
      
 7. Copies the image files specified inside the merge skin's skin.ini config file into the "(Merging Keycount)_key" folder. (specifically the images specified within the [mania] section for the selected keycount)
    
