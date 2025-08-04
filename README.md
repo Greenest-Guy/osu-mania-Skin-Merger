@@ -26,6 +26,7 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 
 ## :exclamation: Issues & Suggestions
   Please report any issues and or suggestions [here on GitHub](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/issues) or message me on Discord ```rh7thm```
+  FYI: As of now, skins with gameplay animations may not merge properly and will be fixed in the future.
 
 
 
@@ -35,12 +36,17 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 2. Copies all files from the base skin into the product folder.
 
 3. Creates another directory within the product folder named "merge_files"
+   
+5. Creates a directory within merge_files titled "(Merging Keycount)_key".
+     - For example if you were merging a 7k skin, the directory would be titled 7_key inside of merge_files
+     
+7. Copies the image files specified inside the merge skin's skin.ini config file into the "(Merging Keycount)_key" folder. (specifically the images specified within the [mania] section for the selected keycount)
+   
+9. Copies any default files not specified in the skin.ini config file, and appends them to the end of that skin.ini key section.
 
-4. Copies the image files specified inside the merge skin's skin.ini config file into the "merge_files" folder. (specifically the images specified within the [mania] section for the selected keycount)
+10. Reports any potentially missing files. (Still finishes the merge)
 
-5. Reports any potentially missing files. (Still finishes the merge)
-
-6. skin.ini config file is edited so that the new keycount has the correct image paths, settings, and adds both authors to the authors section
+11. The skin.ini config file is edited so that the new keycount has the correct image paths, settings, and adds both authors to the authors section.
 
 
 
@@ -52,7 +58,7 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 
 ## :arrow_heading_down: Download Options
 ### :octocat: GitHub
-- [Download Latest Version (EXE)]([https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/download/latest](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/latest))
+- [Download Latest Version (EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/latest)
 ### :cloud: Google Drive
 - [Download via Google Drive](https://drive.google.com/drive/folders/1PNMQrJlja3rPaYmGyrkOC8eXjCaQexuF?usp=sharing)
 ### :snake: Source Code
