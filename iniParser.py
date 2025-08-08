@@ -281,8 +281,47 @@ class IniParser:
         with open(file_path, 'w', encoding="utf-8") as file:
             file.write(new_file)
 
-    # adds a tag to the top of file_path "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n"
+    # removes either @2x.png or .png from end
+    @staticmethod
+    def removeSuffix(path):
+        return path.removesuffix("@2x.png").removesuffix(".png")
 
+    # returns either @2x.png or .png that is at the end
+    def getSuffix(path):
+        if path.lower().endswith("@2x.png"):
+            return "@2x.png"
+
+        if path.lower().endswith(".png"):
+            return ".png"
+
+    @staticmethod
+    def animationExists(path):
+        suffix = IniParser.getSuffix(path)
+        return os.path.exists(f"{IniParser.removeSuffix(path)}-0{suffix}")
+
+    @staticmethod
+    def getAnimations(file_path):
+        suffix = IniParser.getSuffix(file_path)
+        animations = []
+        exists = True
+        num = 0
+
+        if IniParser.animationExists(file_path):
+            while exists:
+                animation = f"{IniParser.removeSuffix(file_path)}-{num}{suffix}"
+
+                if os.path.exists(animation):
+                    animations.append(animation)
+                    num += 1
+
+                else:
+                    exists = False
+
+            return animations
+
+        return None
+
+    # adds a tag to the top of file_path "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n"
     @staticmethod
     def addTag(file_path):
         with open(file_path, 'r', encoding="utf-8") as f:

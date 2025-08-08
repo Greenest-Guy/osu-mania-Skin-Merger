@@ -1,6 +1,29 @@
 # Changelog
 
 All notable changes to this project will be documented in this file. (yyyy-mm-dd)
+## [v1.3.0] 2025-08-08
+
+### Added
+- Animation support
+  
+### Changed
+- When merging skins both @2x and regular files are copied
+  
+### Fixed
+- Overwritting skins no longer causes message saying "skin sent to downloads folder"
+
+### Removed
+
+## [v1.2.1] 2025-08-03
+
+### Added
+
+### Changed
+
+### Fixed
+- bug causing NoteImages to not be assigned
+
+### Removed
 
 ## [v1.2.0] 2025-08-03
 

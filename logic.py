@@ -153,22 +153,41 @@ class SkinMergerLogic:
 
         missing_files = []
         for i in needed_files:
-            try:
-                shutil.copy(IniParser.getHDImage(i), key_folder)
+            found = False
+            hd_image = IniParser.getHDImage(i)
+            if os.path.exists(hd_image):
+                shutil.copy(hd_image, key_folder)
+                found = True
 
-            except Exception:
-                try:
-                    shutil.copy(i, key_folder)
+            if os.path.exists(i):
+                shutil.copy(i, key_folder)
+                found = True
 
-                except Exception as e:
-                    missing_files.append(os.path.basename(i))
-                    if len(missing_files) == 1:
-                        self.app.showErrorWindow(
-                            f"Couldnt copy {len(missing_files)} file. Skin sent to your downloads folder.", ", ".join(missing_files))
+            if IniParser.animationExists(hd_image) or IniParser.animationExists(i):
+                if IniParser.animationExists(hd_image):
+                    for animation in IniParser.getAnimations(hd_image):
+                        shutil.copy(animation, key_folder)
 
-                    else:
-                        self.app.showErrorWindow(
-                            f"Couldnt copy {len(missing_files)} files. Skin sent to your downloads folder.", ", ".join(missing_files))
+                if IniParser.animationExists(i):
+                    for animation in IniParser.getAnimations(i):
+                        shutil.copy(animation, key_folder)
+
+                found = True
+
+            if os.path.exists(i):
+                shutil.copy(i, key_folder)
+                found = True
+
+            if not found:
+                missing_files.append(os.path.basename(i))
+
+        if len(missing_files) == 1:
+            self.app.showErrorWindow(
+                f"Couldnt copy {len(missing_files)} file. Skin sent to your downloads folder.", ", ".join(missing_files))
+
+        elif len(missing_files) > 1:
+            self.app.showErrorWindow(
+                f"Couldnt copy {len(missing_files)} files. Skin sent to your downloads folder.", ", ".join(missing_files))
 
         # edits skin.ini file
         skin_file_path = IniParser.findSkinini(new_skin_folder)
@@ -236,23 +255,43 @@ class SkinMergerLogic:
             self.merge_skin_path, mania_sections[keycount])
 
         missing_files = []
+
         for i in needed_files:
-            try:
-                shutil.copy(IniParser.getHDImage(i), key_folder)
+            found = False
+            hd_image = IniParser.getHDImage(i)
+            if os.path.exists(hd_image):
+                shutil.copy(hd_image, key_folder)
+                found = True
 
-            except Exception:
-                try:
-                    shutil.copy(i, key_folder)
+            if os.path.exists(i):
+                shutil.copy(i, key_folder)
+                found = True
 
-                except Exception as e:
-                    missing_files.append(os.path.basename(i))
-                    if len(missing_files) == 1:
-                        self.app.showErrorWindow(
-                            f"Couldnt copy {len(missing_files)} file. Skin sent to your downloads folder.", ", ".join(missing_files))
+            if IniParser.animationExists(hd_image) or IniParser.animationExists(i):
+                if IniParser.animationExists(hd_image):
+                    for animation in IniParser.getAnimations(hd_image):
+                        shutil.copy(animation, key_folder)
 
-                    else:
-                        self.app.showErrorWindow(
-                            f"Couldnt copy {len(missing_files)} files. Skin sent to your downloads folder.", ", ".join(missing_files))
+                if IniParser.animationExists(i):
+                    for animation in IniParser.getAnimations(i):
+                        shutil.copy(animation, key_folder)
+
+                found = True
+
+            if os.path.exists(i):
+                shutil.copy(i, key_folder)
+                found = True
+
+            if not found:
+                missing_files.append(os.path.basename(i))
+
+        if len(missing_files) == 1:
+            self.app.showErrorWindow(
+                f"Couldnt copy {len(missing_files)} file. {os.path.basename(self.base_skin_path)} has been updated.", ", ".join(missing_files))
+
+        elif len(missing_files) > 1:
+            self.app.showErrorWindow(
+                f"Couldnt copy {len(missing_files)} files. {os.path.basename(self.base_skin_path)} has been updated.", ", ".join(missing_files))
 
         # edits skin.ini file
         skin_file_path = IniParser.findSkinini(self.base_skin_path)
@@ -315,6 +354,15 @@ class SkinMergerLogic:
             self.overwriteSkin()
 
     def finishMerge(self, missing_files):
+        if missing_files == 0:
+            if self.app.merge_option.get() == "New Skin":
+                self.app.showMessagerWindow(
+                    "Merge completed, skin sent to your downloads folder!")
+
+            elif self.app.merge_option.get() == "Overwrite Skin":
+                self.app.showMessagerWindow(
+                    f"Merge completed, {os.path.basename(self.base_skin_path)} has been updated!")
+
         self.base_skin_path = None
         self.merge_skin_path = None
 
@@ -326,10 +374,6 @@ class SkinMergerLogic:
 
         self.app.key_select.configure(values=[])
         self.app.key_select.set("N/A")
-
-        if missing_files == 0:
-            self.app.showMessagerWindow(
-                "Merge completed, skin sent to your downloads folder.")
 
         self.updateTextbox()
 
@@ -359,9 +403,13 @@ class SkinMergerLogic:
             paths = [f"{self.merge_skin_path}{os.sep}{i}.png",
                      f"{os.path.dirname(self.merge_skin_path)}{os.sep}{i}@2x.png"]
 
-            for i in paths:
-                if os.path.exists(i):
-                    shutil.copy(i, key_folder)
+            for path in paths:
+                if os.path.exists(path):
+                    shutil.copy(path, key_folder)
+
+                elif IniParser.getAnimations(path) != None:
+                    for animation in IniParser.getAnimations(path):
+                        shutil.copy(animation, key_folder)
 
         sections[keycount] = section
 
@@ -395,6 +443,10 @@ class SkinMergerLogic:
                     if os.path.exists(file):
                         shutil.copy(file, key_folder)
                         found = True
+
+                    elif IniParser.getAnimations(file) != None:
+                        for animation in IniParser.getAnimations(file):
+                            shutil.copy(animation, key_folder)
 
                 if not found:
                     self.app.showErrorWindow(
@@ -442,6 +494,10 @@ class SkinMergerLogic:
                 if os.path.exists(file):
                     shutil.copy(file, key_folder)
                     found = True
+
+                elif IniParser.getAnimations(file) != None:
+                    for animation in IniParser.getAnimations(file):
+                        shutil.copy(animation, key_folder)
 
             if not found and type == "T":
                 for i in range(keycount):
@@ -498,6 +554,11 @@ class SkinMergerLogic:
                 shutil.copy(file, key_folder)
                 found = True
 
+            elif IniParser.getAnimations(file) != None:
+                for animation in IniParser.getAnimations(file):
+                    shutil.copy(animation, key_folder)
+                found = True
+
         if not found:
             section += f"\n{key}: _blank"
 
@@ -508,6 +569,9 @@ class SkinMergerLogic:
 
         with open(dest_skinini_path, 'w', encoding="utf-8") as file:
             file.write("\n".join(sections.values()))
+
+    def checkForAnimations():
+        pass
 
     @staticmethod
     def getFileName(file_path):
