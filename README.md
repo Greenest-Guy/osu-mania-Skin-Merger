@@ -26,7 +26,6 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 
 ## :exclamation: Issues & Suggestions
   Please report any issues and or suggestions [here on GitHub](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/issues) or message me on Discord ```rh7thm```
-  FYI: As of now, skins with gameplay animations may not merge properly and will be fixed in the future.
 
 
 
