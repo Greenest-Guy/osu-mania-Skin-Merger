@@ -1,6 +1,6 @@
 from default_assets import DEFAULT_ASSETS
 from key_layouts import KEYLAYOUTS
-from IniParser import IniParser
+from iniparser import IniParser
 from tkinter import filedialog
 from datetime import datetime
 import shutil
