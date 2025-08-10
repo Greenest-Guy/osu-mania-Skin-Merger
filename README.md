@@ -55,7 +55,7 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
   
 
 
-## :arrow_heading_down: Download Options
+## :arrow_heading_down: Download Options (Windows)
 ### :octocat: GitHub
 - [Download Latest Version (EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/latest)
 ### :cloud: Google Drive
