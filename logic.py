@@ -152,31 +152,21 @@ class SkinMergerLogic:
             self.merge_skin_path, mania_sections[keycount])
 
         missing_files = []
-        for i in needed_files:
+        for image in needed_files:
             found = False
-            hd_image = IniParser.getHDImage(i)
-            if os.path.exists(hd_image):
-                shutil.copy(hd_image, key_folder)
-                found = True
+            hd_image = IniParser.getHDImage(image)
 
-            if os.path.exists(i):
-                shutil.copy(i, key_folder)
-                found = True
+            images = [image, hd_image]
 
-            if IniParser.animationExists(hd_image) or IniParser.animationExists(i):
-                if IniParser.animationExists(hd_image):
-                    for animation in IniParser.getAnimations(hd_image):
-                        shutil.copy(animation, key_folder)
+            for i in images:
+                if os.path.exists(i):
+                    shutil.copy(i, key_folder)
+                    found = True
 
                 if IniParser.animationExists(i):
                     for animation in IniParser.getAnimations(i):
                         shutil.copy(animation, key_folder)
-
-                found = True
-
-            if os.path.exists(i):
-                shutil.copy(i, key_folder)
-                found = True
+                    found = True
 
             if not found:
                 missing_files.append(os.path.basename(i))
@@ -256,31 +246,21 @@ class SkinMergerLogic:
 
         missing_files = []
 
-        for i in needed_files:
+        for image in needed_files:
             found = False
-            hd_image = IniParser.getHDImage(i)
-            if os.path.exists(hd_image):
-                shutil.copy(hd_image, key_folder)
-                found = True
+            hd_image = IniParser.getHDImage(image)
 
-            if os.path.exists(i):
-                shutil.copy(i, key_folder)
-                found = True
+            images = [image, hd_image]
 
-            if IniParser.animationExists(hd_image) or IniParser.animationExists(i):
-                if IniParser.animationExists(hd_image):
-                    for animation in IniParser.getAnimations(hd_image):
-                        shutil.copy(animation, key_folder)
+            for i in images:
+                if os.path.exists(i):
+                    shutil.copy(i, key_folder)
+                    found = True
 
                 if IniParser.animationExists(i):
                     for animation in IniParser.getAnimations(i):
                         shutil.copy(animation, key_folder)
-
-                found = True
-
-            if os.path.exists(i):
-                shutil.copy(i, key_folder)
-                found = True
+                    found = True
 
             if not found:
                 missing_files.append(os.path.basename(i))
