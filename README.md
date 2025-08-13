@@ -4,6 +4,7 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Greenest-Guy/osu-mania-Skin-Merger/total?style=for-the-badge&color=%2389CFF0)
 [![GitHub Release](https://img.shields.io/github/v/release/Greenest-Guy/osu-mania-Skin-Merger?style=for-the-badge&color=029cff)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/latest)
 [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/Greenest-Guy/osu-mania-Skin-Merger?style=for-the-badge)](https://www.codefactor.io/repository/github/greenest-guy/osu-mania-skin-merger)
+[![Static Badge](https://img.shields.io/badge/Forum%20Post%20-%20pink?style=for-the-badge&logo=osu&logoColor=%23ffffff)](https://osu.ppy.sh/community/forums/topics/2116834?n=1)
 
 
 
