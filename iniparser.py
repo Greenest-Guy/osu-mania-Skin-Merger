@@ -121,7 +121,7 @@ class IniParser:
                 IniParser.startsWith(line, "KeyImage") or
                 IniParser.startsWith(line, "Stage") or
                 IniParser.startsWith(line, "WarningArrow") or
-                (IniParser.startsWith(line, "LightingL") and not IniParser.startsWith(line, "LightingLWidth")) or
+                (IniParser.startsWith(line, "Lighting") and not IniParser.startsWith(line, "LightingLWidth")) or
                 (IniParser.startsWith(line, "Hit") and not IniParser.startsWith(line, "HitPosition")))
 
     # returns a list of all local image paths from a skin.ini file
