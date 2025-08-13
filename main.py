@@ -1,4 +1,3 @@
-from key_layouts import KEYLAYOUTS
 from logic import SkinMergerLogic
 from CTkToolTip import CTkToolTip
 from version import __version__

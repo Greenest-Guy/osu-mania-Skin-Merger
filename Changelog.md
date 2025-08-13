@@ -1,6 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file. (yyyy-mm-dd)
+## [v1.3.1] 2025-08-13
+
+### Added
+- Merging osu mania skins into std, taiko, and catch
+  
+### Changed
+  
+### Fixed
+- Error causing stage images to not be copied over if in skin.ini
+
+### Removed
+
 ## [v1.3.0] 2025-08-08
 
 ### Added
