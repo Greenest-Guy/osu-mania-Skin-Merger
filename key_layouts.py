@@ -1,5 +1,5 @@
 """
-Dictionary for mania-key/mania-note patterns for each keymode 1-18
+Dictionary for mania-key/mania-note patterns for each keymode 1-9
 
 KEY:
     1 - mania-key1
