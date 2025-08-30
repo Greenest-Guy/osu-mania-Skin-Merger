@@ -60,8 +60,6 @@ https://github.com/user-attachments/assets/e4287a93-f442-4049-ba24-a02e8e48a00e
 ## :arrow_heading_down: Download Options (Windows)
 ### :octocat: GitHub
 - [Download Latest Version (EXE)](https://github.com/Greenest-Guy/osu-mania-Skin-Merger/releases/latest)
-### :cloud: Google Drive
-- [Download via Google Drive](https://drive.google.com/drive/folders/1PNMQrJlja3rPaYmGyrkOC8eXjCaQexuF?usp=sharing)
 ### :snake: Source Code
 1. Clone the repository and install all dependencies
 2. Run main.py using Python version 3.7+
