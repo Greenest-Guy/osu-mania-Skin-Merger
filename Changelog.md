@@ -1,6 +1,17 @@
 # Changelog
 
 All notable changes to this project will be documented in this file. (yyyy-mm-dd)
+## [v1.3.3] 2025-08-30
+
+### Added
+  
+### Changed
+  
+### Fixed
+- Bug causing default note images with animations to not be added to skin.ini
+
+### Removed
+
 ## [v1.3.2] 2025-08-29
 
 ### Added

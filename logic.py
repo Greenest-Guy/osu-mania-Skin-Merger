@@ -402,7 +402,7 @@ class SkinMergerLogic:
                 if os.path.exists(path):
                     shutil.copy(path, key_folder)
 
-                elif IniParser.getAnimations(path) != None:
+                if IniParser.getAnimations(path) != None:
                     for animation in IniParser.getAnimations(path):
                         shutil.copy(animation, key_folder)
 
@@ -439,9 +439,10 @@ class SkinMergerLogic:
                         shutil.copy(file, key_folder)
                         found = True
 
-                    elif IniParser.getAnimations(file) != None:
+                    if IniParser.getAnimations(file) != None:
                         for animation in IniParser.getAnimations(file):
                             shutil.copy(animation, key_folder)
+                        found = True
 
                 if not found:
                     self.app.showErrorWindow(
@@ -478,21 +479,23 @@ class SkinMergerLogic:
 
             found = False
 
-            file_paths = [f"{merge_skin_path}{os.sep}mania-note1{type}.png",
-                          f"{merge_skin_path}{os.sep}mania-note1{type}@2x.png",
-                          f"{merge_skin_path}{os.sep}mania-note2{type}.png",
-                          f"{merge_skin_path}{os.sep}mania-note2{type}@2x.png",
-                          f"{merge_skin_path}{os.sep}mania-noteS{type}.png",
-                          f"{merge_skin_path}{os.sep}mania-noteS{type}@2x.png",]
+            file_paths = [f"{merge_skin_path}/mania-note1{type}.png",
+                          f"{merge_skin_path}/mania-note1{type}@2x.png",
+                          f"{merge_skin_path}/mania-note2{type}.png",
+                          f"{merge_skin_path}/mania-note2{type}@2x.png",
+                          f"{merge_skin_path}/mania-noteS{type}.png",
+                          f"{merge_skin_path}/mania-noteS{type}@2x.png",]
 
             for file in file_paths:
                 if os.path.exists(file):
                     shutil.copy(file, key_folder)
                     found = True
 
-                elif IniParser.getAnimations(file) != None:
+                if IniParser.getAnimations(file) != None:
                     for animation in IniParser.getAnimations(file):
                         shutil.copy(animation, key_folder)
+
+                    found = True
 
             if not found and type == "T":
                 for i in range(keycount):
