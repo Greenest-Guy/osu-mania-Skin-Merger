@@ -1,6 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file. (yyyy-mm-dd)
+## [v1.3.2] 2025-08-29
+
+### Added
+  
+### Changed
+  
+### Fixed
+- Bug causing duplicate Author names
+- Tag not being properly added to the top of skin.ini
+
+### Removed
+
 ## [v1.3.1] 2025-08-13
 
 ### Added
