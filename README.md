@@ -10,16 +10,24 @@ osu!mania Skin Merger is a tool designed to merge keycounts from two different o
 
 
 ## :telescope: Preview
-[<img src="https://github.com/Greenest-Guy/osu-mania-Skin-Merger/blob/main/thumbnail.jpg?raw=true" width="400"/>](https://www.youtube.com/watch?v=p7K-NVBHPx0)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=p7K-NVBHPx0">
+    <img src="https://github.com/Greenest-Guy/osu-mania-Skin-Merger/blob/main/thumbnail.jpg?raw=true" width="500" title="osu!mania Skin Merger | Easily Merge Skins"/>
+  </a>
+  <img src="https://github.com/Greenest-Guy/osu-mania-Skin-Merger/blob/main/preview.png?raw=true" width="500"/>
+</p>
 
 
 
 ## :gear: Options
 ### :bricks: Base Skin
-  The base skin is where the majority of the files are drawn from, e.g., menu layout, hitsounds, and the rest of the keycounts, excluding the merging one.
+  The Base Skin is where the majority of the files are drawn from, e.g., menu layout, hitsounds, and the rest of the keycounts, excluding the merging one.
 
 ### :heavy_plus_sign: Merge Skin
-  The merge skin is where the files for the selected keycount are drawn from. E.g., if you selected 7k, the 7k skin files from the merge file will be added to the base skin.
+  The Merge Skin is where the files for the selected keycount are drawn from. E.g., if you selected 7k, the 7k skin files from the merge file will be added to the base skin.
+
+### :wrench: New Skin vs Overwrite Skin
+  The New Skin option will create a new, separate skin in your downloads folder, leaving the Base and Merge Skins untouched. The Overwrite Skin option will add the Merge Skin to the Base Skin directly, thus changing the Base Skin to incorporate the Merge Skin in the selected keycount.
 
 ### :1234: Keycount
   The keycount is taken from the merge skin and added to the base skin.
