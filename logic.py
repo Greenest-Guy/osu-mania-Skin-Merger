@@ -208,13 +208,20 @@ class SkinMergerLogic:
                                   base_filename)
 
         # Update Author
-        IniParser.editValue(skin_file_path, "Author",
-                            f"{IniParser.getValue(IniParser.findSkinini(self.base_skin_path), "Author")} + {IniParser.getValue(IniParser.findSkinini(self.merge_skin_path), "Author")}")
+        base_skin_author = IniParser.getValue(
+            IniParser.findSkinini(self.base_skin_path), "Author")
 
-        self.finishMerge(len(missing_files))
+        merge_skin_author = IniParser.getValue(
+            IniParser.findSkinini(self.merge_skin_path), "Author")
+
+        if merge_skin_author not in base_skin_author:
+            IniParser.editValue(skin_file_path, "Author",
+                                f"{base_skin_author} + {merge_skin_author}")
 
         # Adds Tag to top (Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger)
         IniParser.addTag(skin_file_path)
+
+        self.finishMerge(len(missing_files))
 
     def overwriteSkin(self):
         keycount = int(self.app.key_select.get().strip('k'))
@@ -303,8 +310,16 @@ class SkinMergerLogic:
         # Update Author
         base_skin_author = IniParser.getValue(
             IniParser.findSkinini(self.base_skin_path), "Author")
-        IniParser.editValue(skin_file_path, "Author",
-                            f"{base_skin_author} + {IniParser.getValue(IniParser.findSkinini(self.merge_skin_path), "Author")}")
+
+        merge_skin_author = IniParser.getValue(
+            IniParser.findSkinini(self.merge_skin_path), "Author")
+
+        if merge_skin_author not in base_skin_author:
+            IniParser.editValue(skin_file_path, "Author",
+                                f"{base_skin_author} + {merge_skin_author}")
+
+        # Adds Tag to top (Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger)
+        IniParser.addTag(skin_file_path)
 
         self.finishMerge(len(missing_files))
 

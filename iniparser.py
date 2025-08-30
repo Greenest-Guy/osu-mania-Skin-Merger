@@ -327,10 +327,11 @@ class IniParser:
     # adds a tag to the top of file_path "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n"
     @staticmethod
     def addTag(file_path):
+        tag = "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n"
         with open(file_path, 'r', encoding="utf-8") as f:
             original_content = f.read()
 
-        with open(file_path, 'w', encoding="utf-8") as file:
-            file.write(
-                "//Skins merged using github.com/Greenest-Guy/osu-mania-Skin-Merger\n")
-            file.write(original_content)
+        if tag not in original_content:
+            with open(file_path, 'w', encoding="utf-8") as file:
+                file.write(tag)
+                file.write(original_content)
